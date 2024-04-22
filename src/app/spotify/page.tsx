@@ -50,7 +50,6 @@ export default async function Home() {
           </ScrollArea>
         </section>
       </section>
-
       <PlaylistList title="Your playlists" playlists={playlists} />
       <PlaylistList title="Top playlists" playlists={featurePlaylists} />
     </>
