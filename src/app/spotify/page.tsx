@@ -39,7 +39,6 @@ export default async function Home() {
           <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white">
             Your recently played songs
           </h2>
-
           <ScrollArea className="h-80 w-full">
             {recentlyPlayedTracks.map((item, index) => (
               <TrackMiniItem
@@ -53,7 +52,6 @@ export default async function Home() {
       </section>
 
       <PlaylistList title="Your playlists" playlists={playlists} />
-
       <PlaylistList title="Top playlists" playlists={featurePlaylists} />
     </>
   );
