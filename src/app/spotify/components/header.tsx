@@ -18,7 +18,7 @@ export function Header({ profile }: Props) {
   const currentHours = today.getHours();
 
   return (
-    <header className="px-4 py-8 relative z-20">
+    <header className="px-12 py-8 relative z-20">
       <section className="flex items-center justify-between">
         <div className="flex items-center">
           {pathname !== "/spotify" && (

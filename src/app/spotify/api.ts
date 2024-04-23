@@ -1,5 +1,14 @@
 import axios, { AxiosInstance } from "axios";
-import { UserProfile, Playlist, Track, Search, ListResponse } from "./types";
+import {
+  UserProfile,
+  Playlist,
+  Track,
+  Search,
+  ListResponse,
+  Artist,
+  Album,
+  AlbumOut,
+} from "./types";
 
 export class SpotifyApi {
   private client: AxiosInstance;
@@ -57,6 +66,25 @@ export class SpotifyApi {
     }
   }
 
+  async getProfileSavedAlbums(options?: { limit?: number }) {
+    try {
+      const request = await this.client.get<ListResponse<AlbumOut>>(
+        `/me/albums`,
+        {
+          params: { limit: options?.limit },
+        }
+      );
+      console.log(`get profile albums`, request.data.items.length);
+      const mappedAlbums = request.data.items.map((item) => ({
+        ...item.album,
+      }));
+      return mappedAlbums || [];
+    } catch (error: any) {
+      console.log(`error get profile albums`, error.response.data);
+      return [];
+    }
+  }
+
   async getRecentlyPlayedTracks(options?: { limit?: number }) {
     try {
       interface PlayHistoryObject {
@@ -103,6 +131,100 @@ export class SpotifyApi {
     } catch (error: any) {
       console.log(`error get playlist ${options.id}`, error.response.data);
       return undefined;
+    }
+  }
+
+  async getArtist(options: { id: string }) {
+    try {
+      const request = await this.client.get<Artist>(`/artists/${options.id}`);
+      console.log(`get artist ${options.id}`, request.data.name);
+      return request.data;
+    } catch (error: any) {
+      console.log(`error get artist ${options.id}`, error.response.data);
+      return undefined;
+    }
+  }
+  async getArtistTopTracks(options: { id: string }) {
+    try {
+      interface Response {
+        tracks: Track[];
+      }
+      const request = await this.client.get<Response>(
+        `/artists/${options.id}/top-tracks`
+      );
+      console.log(
+        `get artist ${options.id} tracks`,
+        request.data.tracks.length
+      );
+      return request.data.tracks || [];
+    } catch (error: any) {
+      console.log(`error get artist ${options.id} tracks`, error.response.data);
+      return [];
+    }
+  }
+  async getArtistAlbums(options: { id: string; limit?: number }) {
+    try {
+      const request = await this.client.get<ListResponse<Album>>(
+        `/artists/${options.id}/albums`,
+        {
+          params: { limit: options.limit },
+        }
+      );
+      console.log(`get artist ${options.id} albums`, request.data.items.length);
+      return request.data.items || [];
+    } catch (error: any) {
+      console.log(`error get artist ${options.id} albums`, error.response.data);
+      return [];
+    }
+  }
+  async getArtistRelatedArtists(options: { id: string }) {
+    try {
+      interface Response {
+        artists: Artist[];
+      }
+      const request = await this.client.get<Response>(
+        `/artists/${options.id}/related-artists`
+      );
+      console.log(
+        `get artist ${options.id} related artists`,
+        request.data.artists.length
+      );
+      return request.data.artists || [];
+    } catch (error: any) {
+      console.log(
+        `error get artist ${options.id} related artists`,
+        error.response.data
+      );
+      return [];
+    }
+  }
+
+  async getAlbum(options: { id: string }) {
+    try {
+      const request = await this.client.get<Album>(`/albums/${options.id}`);
+      console.log(`get album ${options.id}`, request.data.name);
+      return request.data;
+    } catch (error: any) {
+      console.log(`error get album ${options.id}`, error.response.data);
+      return undefined;
+    }
+  }
+
+  async getAlbumTracks(options: { id: string; limit?: number }) {
+    try {
+      const request = await this.client.get<ListResponse<Track>>(
+        `/albums/${options.id}/tracks`,
+        {
+          params: {
+            limit: options.limit,
+          },
+        }
+      );
+      console.log(`get album ${options.id} tracks`, request.data.items.length);
+      return request.data.items || [];
+    } catch (error: any) {
+      console.log(`error get album ${options.id} tracks`, error.response.data);
+      return [];
     }
   }
 

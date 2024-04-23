@@ -1,37 +1,36 @@
 import Link from "next/link";
 
-import { Playlist } from "../types";
+import { Album } from "../types";
 
 interface Props {
-  title: string;
-  playlists?: Playlist[];
+  title?: string;
+  albums?: Album[];
 }
-export function PlaylistList({ playlists, title }: Props) {
+export function AlbumsList({ title, albums }: Props) {
   return (
     <section className="px-12 mb-8">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-3xl font-semibold tracking-tight text-white">
-          {title}
+          {title || "Albums"}
         </h2>
-        <div className="text-sm">See all playlists</div>
       </div>
       <section className="grid grid-cols-7">
-        {playlists?.map((playlist) => (
+        {albums?.map((album) => (
           <Link
-            href={`/spotify/playlists/${playlist.id}`}
-            key={playlist.id}
+            href={`/spotify/albums/${album?.id}`}
+            key={album.id}
             className="hover:bg-[#282828] rounded p-3 transition-all cursor-pointer"
           >
             <img
-              src={playlist.images[0].url}
+              src={album?.images?.[0]?.url}
               className="rounded mb-4 w-full aspect-square"
               alt="cover"
             />
             <h3 className="font-medium text-base text-white overflow-hidden truncate w-36">
-              {playlist.name}
+              {album?.name}
             </h3>
             <p className="font-light text-sm text-[#a7a7a7]">
-              {playlist.owner.display_name}
+              {album?.album_type} {album?.release_date?.split("-")[0]}
             </p>
           </Link>
         ))}

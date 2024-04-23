@@ -24,7 +24,7 @@ export default async function Home() {
             src="/spotify-xxl.png"
             className="absolute w-7 h-7 top-[6px] left-4"
           />
-          Connect your spotify account
+          Connect your Spotify account
         </Button>
       </form>
     </div>

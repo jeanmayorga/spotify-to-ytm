@@ -102,7 +102,10 @@ export interface Track {
   uri: string;
   is_local: boolean;
 }
-
+export interface AlbumOut {
+  added_at: string;
+  album: Album;
+}
 export interface Album {
   available_markets: string[];
   type: string;
@@ -117,14 +120,23 @@ export interface Album {
   artists: Artist[];
   external_urls: ExternalUrls;
   total_tracks: number;
+  tracks: ListResponse<Track>;
+  popularity: number;
 }
 
 export interface Artist {
   external_urls: ExternalUrls;
+  followers: {
+    href: string;
+    total: number;
+  };
+  genres: string[];
+  images: Image[];
   href: string;
   id: string;
   name: string;
   type: string;
+  popularity: number;
   uri: string;
 }
 
