@@ -53,7 +53,7 @@ export default async function Playlist({ params }: Props) {
             key={index}
             index={index}
             name={track.name}
-            imageUrl={album?.images[0].url}
+            imageUrl={album?.images[2].url}
             albumId={album?.id}
             albumName={album?.name}
             artists={track.artists}

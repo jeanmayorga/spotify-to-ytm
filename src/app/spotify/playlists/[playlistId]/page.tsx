@@ -45,12 +45,17 @@ export default async function Playlist({ params }: Props) {
         </div>
       </div>
       <div className="relative z-20 px-12 py-8 bg-black">
-        {playlist?.tracks.items.map((item, index) => (
+        {playlist?.tracks.items.map((track, index) => (
           <TrackItem
-            track={item.track}
-            addedAt={item.added_at}
-            index={index}
+            id={track.track.id}
             key={index}
+            index={index}
+            name={track.track.name}
+            imageUrl={track.track.album?.images[2].url}
+            albumId={track.track.album?.id}
+            albumName={track.track.album?.name}
+            artists={track.track.artists}
+            duration={track.track.duration_ms}
           />
         ))}
       </div>

@@ -73,7 +73,7 @@ export default async function Artist({ params }: Props) {
                   key={index}
                   index={index}
                   name={track.name}
-                  imageUrl={track.album?.images[0].url}
+                  imageUrl={track.album?.images[2].url}
                   albumId={track.album?.id}
                   albumName={track.album?.name}
                   artists={track.artists}

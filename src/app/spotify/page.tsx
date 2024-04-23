@@ -39,7 +39,7 @@ export default async function Home() {
                 key={index}
                 index={index}
                 name={track.name}
-                imageUrl={track.album?.images[0].url}
+                imageUrl={track.album?.images[2].url}
                 artists={track.artists}
                 duration={track.duration_ms}
                 addedAt={added_at}
@@ -58,7 +58,7 @@ export default async function Home() {
                 key={index}
                 index={index}
                 name={track.name}
-                imageUrl={track.album?.images[0].url}
+                imageUrl={track.album?.images[2].url}
                 artists={track.artists}
                 duration={track.duration_ms}
                 playedAt={played_at}
