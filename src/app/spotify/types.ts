@@ -1,3 +1,4 @@
+export type SearchType = "album" | "artist" | "playlist" | "track";
 export interface ListResponse<T> {
   href: string;
   limit: number;

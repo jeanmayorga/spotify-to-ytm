@@ -4,6 +4,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import { AlbumsList } from "../../components/albums-list";
 import Link from "next/link";
 import { TrackItem } from "../../components/track-item";
+import { PlaylistList } from "../../components/playlist-list";
 
 interface Props {
   params: { artistId: string };
@@ -22,6 +23,12 @@ export default async function Artist({ params }: Props) {
   });
   const relatedArtists = await spotifyApi.getArtistRelatedArtists({
     id: params.artistId,
+  });
+
+  const search = await spotifyApi.search({
+    q: `${artist?.name}`,
+    limit: 14,
+    type: ["playlist"],
   });
 
   return (
@@ -112,6 +119,8 @@ export default async function Artist({ params }: Props) {
           </section>
         </section>
       </div>
+
+      <PlaylistList title="Playlists" playlists={search.playlists.items} />
 
       <AlbumsList title="Discography" albums={albums} />
     </>

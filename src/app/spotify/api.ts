@@ -8,6 +8,7 @@ import {
   Artist,
   Album,
   AlbumOut,
+  SearchType,
 } from "./types";
 
 export class SpotifyApi {
@@ -228,36 +229,41 @@ export class SpotifyApi {
     }
   }
 
-  // not used
-  async getTracks(options: { id: string }) {
-    try {
-      const request = await this.client.get<Track>(`/tracks/${options.id}`);
-      console.log(`get track ${options.id}`, request.data.name);
-      return request.data;
-    } catch (error: any) {
-      console.log(`error get track ${options.id}`, error.response.data);
-      return null;
+  async search(options: { q: string; type: SearchType[]; limit: number }) {
+    interface Response {
+      albums: ListResponse<Album>;
+      artists: ListResponse<Artist>;
+      playlists: ListResponse<Playlist>;
+      tracks: ListResponse<Track>;
     }
-  }
-
-  // not used
-  async getPlaylists(options: { query: string }) {
     try {
-      const request = await this.client.get<Search<Playlist[]>>(`/search`, {
+      const request = await this.client.get<Response>("/search", {
         params: {
-          type: "playlist",
-          limit: "50",
-          q: options.query,
+          q: options.q,
+          limit: options.limit,
+          type: options.type.join(","),
         },
       });
-      console.log(
-        `get playlist ${options.query}`,
-        request.data.playlists.items.length
-      );
-      return request.data.playlists.items;
+      console.log(`get search`, options.q);
+      return request.data;
     } catch (error: any) {
-      console.log(`error get playlists ${options.query}`, error.response.data);
-      return [];
+      const emptyResponse = {
+        href: "",
+        limit: 0,
+        next: "",
+        offset: 0,
+        previous: "",
+        total: 0,
+        items: [],
+      };
+
+      console.log(`error search ${options.q}`, error.response.data);
+      return {
+        albums: emptyResponse,
+        artists: emptyResponse,
+        playlists: emptyResponse,
+        tracks: emptyResponse,
+      };
     }
   }
 }
