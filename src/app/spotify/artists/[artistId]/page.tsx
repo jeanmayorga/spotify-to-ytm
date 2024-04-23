@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { SpotifyApi } from "../../api";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { TrackMiniItem } from "../../components/track-mini-item";
 import { AlbumsList } from "../../components/albums-list";
 import Link from "next/link";
 import { TrackItem } from "../../components/track-item";
