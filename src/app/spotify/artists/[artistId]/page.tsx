@@ -5,6 +5,10 @@ import { AlbumsList } from "../../components/albums-list";
 import Link from "next/link";
 import { TrackItem } from "../../components/track-item";
 import { PlaylistList } from "../../components/playlist-list";
+import { SectionTitle } from "../../components/section-title";
+import { ArtistItem } from "../../components/artist-item";
+import { PlaylistItem } from "../../components/playlist-item";
+import { PlaylistSkeleton } from "../../components/playlist-item-skeleton";
 
 interface Props {
   params: { artistId: string };
@@ -38,12 +42,12 @@ export default async function Artist({ params }: Props) {
           <img src={artist?.images[0].url} className="w-full" />
         </div>
         <div className="absolute top-0 left-0 bg-gradient-to-t from-black/20 to-black/10 w-full h-full z-10" />
-        <div className="py-8 px-12 grid grid-cols-6 gap-4 z-20 relative">
+        <div className="py-8 px-12 flex items-center space-x-4 z-20 relative">
           <img
             src={artist?.images[0].url}
-            className="shadow-2xl w-[204px] h-[204px] drop-shadow-md rounded"
+            className="shadow-2xl w-[204px] h-[204px] drop-shadow-md rounded aspect-square"
           />
-          <div className="col-span-5 flex flex-col justify-end ">
+          <div className="flex flex-col justify-end ">
             <span className="text-white font-light text-sm mb-2">Artist</span>
             <h1 className="font-bold text-7xl text-white mb-4 drop-shadow-md">
               {artist?.name}
@@ -61,18 +65,16 @@ export default async function Artist({ params }: Props) {
             </p>
             <p className="text-white font-light text-sm">
               <span className="font-bold">Genres:</span>{" "}
-              {artist?.genres.map((genre) => `${genre} `)}
+              {artist?.genres.join(", ")}
             </p>
           </div>
         </div>
       </div>
-      <div className="relative z-20 px-12 py-8 bg-black">
-        <section className="grid grid-cols-4 gap-4">
-          <section className=" col-span-3">
-            <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white">
-              Featured Songs
-            </h2>
 
+      <div className="relative z-20 px-12 py-8 bg-black">
+        <section className="grid grid-cols-4 gap-4 mb-8">
+          <section className=" col-span-3">
+            <SectionTitle title="Featured Songs" />
             <ScrollArea className="h-80 w-full">
               {topTracks.map((track, index) => (
                 <TrackItem
@@ -90,39 +92,39 @@ export default async function Artist({ params }: Props) {
             </ScrollArea>
           </section>
           <section>
-            <h2 className="mb-4 text-3xl font-semibold tracking-tight text-white">
-              Similar Artists
-            </h2>
+            <SectionTitle title="Similar Artists" />
             <ScrollArea className="h-80 w-full">
               {relatedArtists.map((relatedArtist) => (
-                <Link
-                  href={`/spotify/artists/${relatedArtist.id}`}
+                <ArtistItem
                   key={relatedArtist.id}
-                  className="flex items-center hover:bg-neutral-800 py-1 px-2 rounded transition-all"
-                >
-                  <img
-                    src={relatedArtist?.images?.[0]?.url}
-                    className="w-9 h-9 rounded-full mr-2"
-                  />
-                  <div>
-                    {relatedArtist.name}
-                    <div className="text-xs font-extralight">
-                      {(relatedArtist?.followers?.total || 0)
-                        .toString()
-                        .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}{" "}
-                      followers
-                    </div>
-                  </div>
-                </Link>
+                  id={relatedArtist.id}
+                  name={relatedArtist.name}
+                  imageUrl={relatedArtist?.images?.[0]?.url}
+                  followers={relatedArtist?.followers?.total}
+                />
               ))}
             </ScrollArea>
           </section>
         </section>
+
+        <section className="mb-8">
+          <SectionTitle title="Playlists" />
+          <section className="grid grid-cols-7">
+            <PlaylistSkeleton />
+            {search.playlists.items?.map((playlist) => (
+              <PlaylistItem
+                key={playlist.id}
+                id={playlist.id}
+                imageUrl={playlist?.images?.[0]?.url}
+                name={playlist.name}
+                displayName={playlist.owner.display_name}
+              />
+            ))}
+          </section>
+        </section>
+
+        <AlbumsList title="Discography" albums={albums} />
       </div>
-
-      <PlaylistList title="Playlists" playlists={search.playlists.items} />
-
-      <AlbumsList title="Discography" albums={albums} />
     </>
   );
 }

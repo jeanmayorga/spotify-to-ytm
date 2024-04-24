@@ -22,7 +22,7 @@ export function Header({ profile }: Props) {
       <section className="flex items-center justify-between">
         <div className="flex items-center">
           {pathname !== "/spotify" && (
-            <Link href="/">
+            <Link href="/spotify">
               <Button
                 className="rounded-full mr-2 "
                 size="icon"

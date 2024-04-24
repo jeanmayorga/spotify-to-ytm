@@ -1,6 +1,9 @@
 import { cookies } from "next/headers";
 import { SpotifyApi } from "../../api";
 import { TrackItem } from "../../components/track-item";
+import { play } from "../../actions";
+import { Button } from "~/components/ui/button";
+import { Play } from "lucide-react";
 
 interface Props {
   params: { albumId: string };
@@ -14,6 +17,12 @@ export default async function Playlist({ params }: Props) {
     id: params.albumId,
     limit: album?.total_tracks || 10,
   });
+
+  async function onPlay() {
+    "use server";
+
+    play({ context_uri: `spotify:album:${params.albumId}` });
+  }
 
   return (
     <>
@@ -47,6 +56,14 @@ export default async function Playlist({ params }: Props) {
         </div>
       </div>
       <div className="relative z-20 px-12 py-8 bg-black">
+        <div className="mb-8">
+          <form action={onPlay}>
+            <Button className="rounded-full" variant="secondary">
+              <Play className="mr-1" /> Play playlist
+            </Button>
+          </form>
+        </div>
+
         {tracks.map((track, index) => (
           <TrackItem
             id={track.id}

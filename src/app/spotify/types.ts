@@ -102,6 +102,8 @@ export interface Track {
   popularity: number;
   uri: string;
   is_local: boolean;
+  played_at: string;
+  added_at: string;
 }
 export interface AlbumOut {
   added_at: string;
@@ -173,4 +175,15 @@ export interface UserProfile {
   product: string;
   type: string;
   uri: string;
+}
+
+export interface Device {
+  id: string;
+  is_active: boolean;
+  is_private_session: boolean;
+  is_restricted: boolean;
+  name: string;
+  type: string;
+  volume_percent: number;
+  supports_volume: boolean;
 }

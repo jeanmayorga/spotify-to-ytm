@@ -33,3 +33,9 @@ export function msConversion(millis: number): string {
     ? `${hrs}:${paddedMin}:${paddedSec}`
     : `${paddedMin}:${paddedSec}`;
 }
+
+export function getRandomInt(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

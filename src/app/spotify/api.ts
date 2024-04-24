@@ -9,6 +9,7 @@ import {
   Album,
   AlbumOut,
   SearchType,
+  Device,
 } from "./types";
 
 export class SpotifyApi {
@@ -24,14 +25,67 @@ export class SpotifyApi {
     });
   }
 
+  async getRecommendedTracks(options: {
+    seed_tracks?: string[];
+    seed_genres?: string[];
+    seed_artists?: string[];
+    limit?: number;
+  }) {
+    try {
+      interface Response {
+        tracks: Track[];
+      }
+      const request = await this.client.get<Response>(`/recommendations`, {
+        params: {
+          seed_tracks: options.seed_tracks?.slice(0, 5)?.join(","),
+          seed_genres: options.seed_genres?.slice(0, 5)?.join(","),
+          seed_artists: options.seed_artists?.slice(0, 5)?.join(","),
+          limit: options.limit,
+        },
+      });
+      console.log(
+        `get recommended tracks`,
+        options,
+        request.data.tracks.length
+      );
+      return request.data.tracks || [];
+    } catch (error: any) {
+      console.log({ error: JSON.stringify(error.headers) });
+      console.log(`get recommended tracks`, error?.response?.data);
+      return [];
+    }
+  }
+
   async getProfile() {
     try {
       const request = await this.client.get<UserProfile>(`/me`);
       console.log(`get profile`, request.data.id);
       return request.data;
     } catch (error: any) {
-      console.log(`error get profile`, error.response.data);
+      console.log(`error get profile`, error?.response?.data);
       return null;
+    }
+  }
+
+  async getProfileTopTracks(options: {
+    timeRange?: "long_term" | "medium_term" | "short_term";
+    limit?: number;
+  }) {
+    try {
+      const request = await this.client.get<ListResponse<Track>>(
+        `/me/top/tracks`,
+        {
+          params: {
+            time_range: options.timeRange,
+            limit: options.limit,
+          },
+        }
+      );
+      console.log(`get profile top tracks`, options, request.data.items.length);
+      return request.data.items || [];
+    } catch (error: any) {
+      console.log(`get profile top tracks`, error?.response?.data);
+      return [];
     }
   }
 
@@ -44,7 +98,7 @@ export class SpotifyApi {
       console.log(`get profile playlist`, request.data.items.length);
       return request.data.items || [];
     } catch (error: any) {
-      console.log(`error get profile playlist`, error.response.data);
+      console.log(`error get profile playlist`, error?.response?.data);
       return [];
     }
   }
@@ -62,7 +116,7 @@ export class SpotifyApi {
       );
       return request.data.playlists.items || [];
     } catch (error: any) {
-      console.log(`error get profile playlist`, error.response.data);
+      console.log(`error get profile playlist`, error?.response?.data);
       return [];
     }
   }
@@ -81,7 +135,7 @@ export class SpotifyApi {
       }));
       return mappedAlbums || [];
     } catch (error: any) {
-      console.log(`error get profile albums`, error.response.data);
+      console.log(`error get profile albums`, error?.response?.data);
       return [];
     }
   }
@@ -96,10 +150,16 @@ export class SpotifyApi {
         `/me/player/recently-played`,
         { params: { limit: options?.limit } }
       );
-      console.log(`get recently played tracks`, request.data.items.length);
-      return request.data.items || [];
+      const mapped: Track[] =
+        request.data.items.map((item) => ({
+          ...item.track,
+          played_at: item.played_at,
+        })) || [];
+
+      console.log(`get recently played tracks`, mapped.length);
+      return mapped;
     } catch (error: any) {
-      console.log(`error recently played tracks`, error.response.data);
+      console.log(`error recently played tracks`, error?.response?.data);
       return [];
     }
   }
@@ -114,10 +174,16 @@ export class SpotifyApi {
         `/me/tracks`,
         { params: { limit: options?.limit } }
       );
-      console.log(`get saved tracks`, request.data.items.length);
-      return request.data.items || [];
+      const mapped: Track[] =
+        request.data.items.map((item) => ({
+          ...item.track,
+          added_at: item.added_at,
+        })) || [];
+
+      console.log(`get saved tracks`, mapped.length);
+      return mapped || [];
     } catch (error: any) {
-      console.log(`error get saved tracks`, error.response.data);
+      console.log(`error get saved tracks`, error?.response?.data);
       return [];
     }
   }
@@ -128,9 +194,10 @@ export class SpotifyApi {
         `/playlists/${options.id}`
       );
       console.log(`get playlist ${options.id}`, request.data.name);
+      // await new Promise((r) => setTimeout(r, 3000));
       return request.data;
     } catch (error: any) {
-      console.log(`error get playlist ${options.id}`, error.response.data);
+      console.log(`error get playlist ${options.id}`, error?.response?.data);
       return undefined;
     }
   }
@@ -141,7 +208,7 @@ export class SpotifyApi {
       console.log(`get artist ${options.id}`, request.data.name);
       return request.data;
     } catch (error: any) {
-      console.log(`error get artist ${options.id}`, error.response.data);
+      console.log(`error get artist ${options.id}`, error?.response?.data);
       return undefined;
     }
   }
@@ -159,7 +226,10 @@ export class SpotifyApi {
       );
       return request.data.tracks || [];
     } catch (error: any) {
-      console.log(`error get artist ${options.id} tracks`, error.response.data);
+      console.log(
+        `error get artist ${options.id} tracks`,
+        error?.response?.data
+      );
       return [];
     }
   }
@@ -174,7 +244,10 @@ export class SpotifyApi {
       console.log(`get artist ${options.id} albums`, request.data.items.length);
       return request.data.items || [];
     } catch (error: any) {
-      console.log(`error get artist ${options.id} albums`, error.response.data);
+      console.log(
+        `error get artist ${options.id} albums`,
+        error?.response?.data
+      );
       return [];
     }
   }
@@ -194,7 +267,7 @@ export class SpotifyApi {
     } catch (error: any) {
       console.log(
         `error get artist ${options.id} related artists`,
-        error.response.data
+        error?.response?.data
       );
       return [];
     }
@@ -206,7 +279,7 @@ export class SpotifyApi {
       console.log(`get album ${options.id}`, request.data.name);
       return request.data;
     } catch (error: any) {
-      console.log(`error get album ${options.id}`, error.response.data);
+      console.log(`error get album ${options.id}`, error?.response?.data);
       return undefined;
     }
   }
@@ -224,7 +297,10 @@ export class SpotifyApi {
       console.log(`get album ${options.id} tracks`, request.data.items.length);
       return request.data.items || [];
     } catch (error: any) {
-      console.log(`error get album ${options.id} tracks`, error.response.data);
+      console.log(
+        `error get album ${options.id} tracks`,
+        error?.response?.data
+      );
       return [];
     }
   }
@@ -257,13 +333,48 @@ export class SpotifyApi {
         items: [],
       };
 
-      console.log(`error search ${options.q}`, error.response.data);
+      console.log(`error search ${options.q}`, error?.response?.data);
       return {
         albums: emptyResponse,
         artists: emptyResponse,
         playlists: emptyResponse,
         tracks: emptyResponse,
       };
+    }
+  }
+
+  async play(options?: { context_uri?: string; uris?: string[] }) {
+    try {
+      await this.client.put(`/me/player/play`, options);
+      console.log(`play `, options);
+      return true;
+    } catch (error: any) {
+      console.log(`error playing`, error?.response?.data);
+      return false;
+    }
+  }
+
+  async getPlayerDevices() {
+    interface Response {
+      devices: Device[];
+    }
+    try {
+      const request = await this.client.get<Response>(`/me/player/devices`);
+      console.log(`get player devices`, request.data.devices.length);
+      return request.data.devices;
+    } catch (error: any) {
+      console.log(`error get player devices`, error?.response?.data);
+      return [];
+    }
+  }
+  async setPlayerDevice(options: { device_ids: string[] }) {
+    try {
+      await this.client.put<Response>(`/me/player`, options);
+      console.log(`get player device`);
+      return true;
+    } catch (error: any) {
+      console.log(`error set player device`, error?.response?.data);
+      return false;
     }
   }
 }

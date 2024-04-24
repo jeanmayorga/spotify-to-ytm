@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { SpotifyApi } from "./api";
 import { redirect } from "next/navigation";
 import { Header } from "./components/header";
-import { SignIn } from "../youtube/components/sign-in";
+import { Player } from "./components/player";
 
 export default async function RootLayout({
   children,
@@ -23,7 +23,9 @@ export default async function RootLayout({
         {children}
       </div>
       <div className="col-span-3 border-l border-gray-950">
-        <SignIn />
+        <div className="py-8 px-6">
+          <Player token={spotifyAcessTokenCookie?.value} />
+        </div>
       </div>
     </main>
   );
