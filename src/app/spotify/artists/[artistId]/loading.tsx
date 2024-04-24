@@ -26,10 +26,9 @@ export default async function Loading() {
       </div>
 
       <div className="relative z-20 px-12 py-8 bg-black">
-        <section className="grid grid-cols-4 gap-4">
+        <section className="grid grid-cols-4 gap-4 mb-8">
           <section className=" col-span-3">
             <SectionTitle title="Featured Songs" />
-
             <ScrollArea className="h-80 w-full">
               <TrackListSkeleton />
             </ScrollArea>
@@ -43,7 +42,7 @@ export default async function Loading() {
         </section>
         <section className="mb-8">
           <SectionTitle title="Playlists" />
-          <PlaylistListSkeleton />
+          <PlaylistListSkeleton limit={14} />
         </section>
       </div>
     </>

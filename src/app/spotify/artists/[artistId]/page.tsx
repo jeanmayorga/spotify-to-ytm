@@ -2,13 +2,10 @@ import { cookies } from "next/headers";
 import { SpotifyApi } from "../../api";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { AlbumsList } from "../../components/albums-list";
-import Link from "next/link";
 import { TrackItem } from "../../components/track-item";
-import { PlaylistList } from "../../components/playlist-list";
 import { SectionTitle } from "../../components/section-title";
 import { ArtistItem } from "../../components/artist-item";
 import { PlaylistItem } from "../../components/playlist-item";
-import { PlaylistSkeleton } from "../../components/playlist-item-skeleton";
 
 interface Props {
   params: { artistId: string };
@@ -110,7 +107,6 @@ export default async function Artist({ params }: Props) {
         <section className="mb-8">
           <SectionTitle title="Playlists" />
           <section className="grid grid-cols-7">
-            <PlaylistSkeleton />
             {search.playlists.items?.map((playlist) => (
               <PlaylistItem
                 key={playlist.id}

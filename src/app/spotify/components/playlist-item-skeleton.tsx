@@ -1,7 +1,7 @@
 import { Skeleton } from "~/components/ui/skeleton";
 import { getRandomInt } from "../utils";
 
-export function PlaylistSkeleton() {
+export function PlaylistListItemSkeleton() {
   return (
     <div className="rounded p-3 transition-all">
       <Skeleton className="rounded mb-[20px] w-full aspect-square" />
