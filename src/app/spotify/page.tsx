@@ -6,12 +6,10 @@ import { AlbumsList } from "./components/albums-list";
 import { Button } from "~/components/ui/button";
 import { TrackListRecommend } from "./components/track-list-recommend";
 import { SectionTitle } from "./components/section-title";
-import { TrackList } from "./components/track-list";
 import Link from "next/link";
 import { Track } from "./types";
-import { Suspense } from "react";
-import { TrackListSkeleton } from "./components/track-list-skeleton";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { TrackItem } from "./components/track-item";
 
 interface Props {
   searchParams: {
@@ -28,34 +26,28 @@ export default async function Home({ searchParams }: Props) {
     spotifyApi.getProfileSavedAlbums({ limit: 7 }),
   ]);
 
-  const tab = searchParams.tab;
-  let tracks: Track[] = [];
+  const isRecentlyPlayedTracks =
+    searchParams.tab === "recently_played_tracks" || !searchParams.tab;
+  const isSavedTracks = searchParams.tab === "saved_tracks";
+  const isTopTracks = searchParams.tab === "top_tracks";
 
-  if (searchParams.tab === "recently_played_tracks" || !searchParams.tab) {
+  let tracks: Track[] = [];
+  let title: string = "Songs";
+
+  if (isRecentlyPlayedTracks) {
     tracks = await spotifyApi.getRecentlyPlayedTracks({ limit: 25 });
+    title = "Your recently played songs";
   }
-  if (searchParams.tab === "saved_tracks") {
+  if (isSavedTracks) {
     tracks = await spotifyApi.getSavedTracks({ limit: 25 });
+    title = "Your liked songs";
   }
-  if (searchParams.tab === "top_tracks") {
+  if (isTopTracks) {
     tracks = await spotifyApi.getProfileTopTracks({
       limit: 25,
       timeRange: "long_term",
     });
-  }
-
-  function getSongsTitle(tab: Props["searchParams"]["tab"]) {
-    if (tab === "recently_played_tracks") {
-      return "Your recently played songs";
-    }
-    if (tab === "saved_tracks") {
-      return "Your liked songs";
-    }
-    if (tab === "top_tracks") {
-      return "Your top songs";
-    }
-
-    return "Songs";
+    title = "Your top songs";
   }
 
   return (
@@ -63,9 +55,7 @@ export default async function Home({ searchParams }: Props) {
       <div className="flex items-center mb-8">
         <Link href="?tab=recently_played_tracks">
           <Button
-            variant={
-              tab === "recently_played_tracks" || !tab ? "secondary" : "ghost"
-            }
+            variant={isRecentlyPlayedTracks ? "secondary" : "ghost"}
             className="rounded-full"
           >
             Recently played songs
@@ -73,7 +63,7 @@ export default async function Home({ searchParams }: Props) {
         </Link>
         <Link href="?tab=saved_tracks">
           <Button
-            variant={tab === "saved_tracks" ? "secondary" : "ghost"}
+            variant={isSavedTracks ? "secondary" : "ghost"}
             className="rounded-full"
           >
             Liked songs
@@ -81,7 +71,7 @@ export default async function Home({ searchParams }: Props) {
         </Link>
         <Link href="?tab=top_tracks">
           <Button
-            variant={tab === "top_tracks" ? "secondary" : "ghost"}
+            variant={isTopTracks ? "secondary" : "ghost"}
             className="rounded-full"
           >
             Top songs
@@ -91,10 +81,22 @@ export default async function Home({ searchParams }: Props) {
 
       {tracks.length > 0 && (
         <>
-          <SectionTitle title={getSongsTitle(tab)} />
+          <SectionTitle title={title} />
           <section className="mb-8 grid grid-cols-2 gap-2">
             <ScrollArea className="h-96 w-full">
-              <TrackList tracks={tracks} />
+              {tracks.map((track, index) => (
+                <TrackItem
+                  id={track.id}
+                  key={index}
+                  index={index}
+                  name={track.name}
+                  imageUrl={track.album?.images[2].url}
+                  artists={track.artists}
+                  duration={track.duration_ms}
+                  playedAt={track.played_at}
+                  addedAt={track.added_at}
+                />
+              ))}
             </ScrollArea>
             <ScrollArea className="h-96 w-full">
               <TrackListRecommend uris={tracks.map((t) => t.id)} />

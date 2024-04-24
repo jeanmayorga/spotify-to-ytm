@@ -1,16 +1,16 @@
 import { Button } from "~/components/ui/button";
-import { SectionTitle } from "../components/section-title";
-import { TrackListSkeleton } from "../components/track-list-skeleton";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { PlaylistListSkeleton } from "../components/playlist-list-skeleton";
+import { SectionTitle } from "./components/section-title";
 import Link from "next/link";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { TrackListSkeleton } from "./components/track-list-skeleton";
+import { PlaylistListSkeleton } from "./components/playlist-list-skeleton";
 
 interface Props {
   searchParams: {
     tab?: "recently_played_tracks" | "saved_tracks" | "top_tracks";
   };
 }
-export default async function Home({ searchParams }: Props) {
+export default function Home({ searchParams }: Props) {
   const isRecentlyPlayedTracks =
     searchParams?.tab === "recently_played_tracks" || !searchParams?.tab;
   const isSavedTracks = searchParams?.tab === "saved_tracks";
