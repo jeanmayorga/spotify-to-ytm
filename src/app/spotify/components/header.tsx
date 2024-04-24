@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { UserProfile } from "../types";
@@ -21,17 +22,25 @@ export function Header({ profile }: Props) {
     <header className="px-12 py-8 relative z-20">
       <section className="flex items-center justify-between">
         <div className="flex items-center">
-          {pathname !== "/spotify" && (
-            <Link href="/spotify">
-              <Button
-                className="rounded-full mr-2 "
-                size="icon"
-                variant="outline"
+          <AnimatePresence>
+            {!pathname.includes("/spotify/home") && (
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: "auto" }}
+                exit={{ width: 0 }}
               >
-                <ArrowLeft />
-              </Button>
-            </Link>
-          )}
+                <Link href="/spotify/home">
+                  <Button
+                    className="rounded-full mr-2 "
+                    size="icon"
+                    variant="outline"
+                  >
+                    <ArrowLeft />
+                  </Button>
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <Avatar className="mr-4 drop-shadow-md">
             <AvatarImage src={profile.images[0].url} />
             <AvatarFallback>{profile.display_name[0]}</AvatarFallback>
