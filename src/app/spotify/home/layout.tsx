@@ -12,10 +12,10 @@ export default async function Layout({ children }: Props) {
   const spotifyAcessTokenCookie = cookies().get("spotify-access-token");
   const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);
 
-  const [playlists, featurePlaylists, savedAlbums] = await Promise.all([
+  const [playlists, featurePlaylists] = await Promise.all([
     spotifyApi.getProfilePlaylists({ limit: 14 }),
     spotifyApi.getProfileFeaturePlaylists({ limit: 14 }),
-    spotifyApi.getProfileSavedAlbums({ limit: 7 }),
+    // spotifyApi.getProfileSavedAlbums({ limit: 7 }),
   ]);
 
   return (
@@ -30,7 +30,7 @@ export default async function Layout({ children }: Props) {
       <SectionTitle title="Your top playlists" />
       <PlaylistList playlists={featurePlaylists} />
 
-      <AlbumsList title="Your saved albums" albums={savedAlbums} />
+      {/* <AlbumsList title="Your saved albums" albums={savedAlbums} /> */}
     </div>
   );
 }
