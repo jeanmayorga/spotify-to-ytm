@@ -46,7 +46,7 @@ export function TrackItem({
 
   return (
     <div
-      className="flex items-center justify-between text-white hover:bg-neutral-800 active:bg-neutral-900 py-1 px-2 rounded transition-all group"
+      className="flex items-center justify-between text-white hover:bg-neutral-800 active:bg-neutral-900 py-1 px-2 rounded transition-all group select-none"
       onDoubleClick={onPlay}
     >
       <div className="flex items-center">

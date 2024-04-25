@@ -194,7 +194,6 @@ export class SpotifyApi {
         `/playlists/${options.id}`
       );
       console.log(`get playlist ${options.id}`, request.data.name);
-      // await new Promise((r) => setTimeout(r, 3000));
       return request.data;
     } catch (error: any) {
       console.log(`error get playlist ${options.id}`, error?.response?.data);

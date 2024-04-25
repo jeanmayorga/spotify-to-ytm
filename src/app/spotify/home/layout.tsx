@@ -14,13 +14,14 @@ export default async function Layout({ children }: Props) {
 
   const [playlists, featurePlaylists, savedAlbums] = await Promise.all([
     spotifyApi.getProfilePlaylists({ limit: 14 }),
-    spotifyApi.getProfileFeaturePlaylists({ limit: 7 }),
+    spotifyApi.getProfileFeaturePlaylists({ limit: 14 }),
     spotifyApi.getProfileSavedAlbums({ limit: 7 }),
   ]);
 
   return (
     <div className="px-12">
       <HomeMenu />
+
       {children}
 
       <SectionTitle title="Your playlists" />

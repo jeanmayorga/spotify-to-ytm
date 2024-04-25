@@ -4,7 +4,6 @@ import { TrackItem } from "../../components/track-item";
 import { Play, Sparkles } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { play } from "../../actions";
-import { TrackList } from "../../components/track-list";
 
 interface Props {
   params: { playlistId: string };
@@ -14,6 +13,7 @@ export default async function Playlist({ params }: Props) {
   const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);
 
   const playlist = await spotifyApi.getPlaylist({ id: params.playlistId });
+  const tracks = playlist?.tracks.items.map((items) => items.track) || [];
 
   async function onPlay() {
     "use server";
@@ -68,9 +68,21 @@ export default async function Playlist({ params }: Props) {
           </form>
         </div> */}
 
-        <TrackList
-          tracks={playlist?.tracks.items.map((items) => items.track) || []}
-        />
+        {tracks.map((track, index) => (
+          <TrackItem
+            id={track.id}
+            key={index}
+            index={index}
+            name={track.name}
+            imageUrl={track.album?.images[2].url}
+            albumId={track.album.id}
+            albumName={track.album.name}
+            artists={track.artists}
+            duration={track.duration_ms}
+            playedAt={track.played_at}
+            addedAt={track.added_at}
+          />
+        ))}
       </div>
     </>
   );
