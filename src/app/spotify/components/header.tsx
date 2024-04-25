@@ -42,8 +42,8 @@ export function Header({ profile }: Props) {
             )}
           </AnimatePresence>
           <Avatar className="mr-4 drop-shadow-md">
-            <AvatarImage src={profile.images[0].url} />
-            <AvatarFallback>{profile.display_name[0]}</AvatarFallback>
+            <AvatarImage src={profile?.images?.[0]?.url} />
+            <AvatarFallback>{profile?.display_name?.[0]}</AvatarFallback>
           </Avatar>
           <h2 className="text-3xl font-semibold tracking-tight text-white drop-shadow-md">
             {profile.display_name.split(" ")[0]}
