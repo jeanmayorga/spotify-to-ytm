@@ -12,6 +12,8 @@ import {
   Device,
 } from "./types";
 
+const cacheRecommendations: any = {};
+
 export class SpotifyApi {
   private client: AxiosInstance;
 
@@ -27,27 +29,31 @@ export class SpotifyApi {
 
   async getRecommendedTracks(options: {
     seed_tracks?: string[];
-    seed_genres?: string[];
-    seed_artists?: string[];
     limit?: number;
   }) {
+    interface Response {
+      tracks: Track[];
+    }
     try {
-      interface Response {
-        tracks: Track[];
+      const key = JSON.stringify(options);
+      const saved = cacheRecommendations[key];
+
+      if (saved) {
+        console.log(`get cached recommended tracks`, saved.length);
+        return saved as Track[];
       }
+
+      const params = {
+        seed_tracks: options.seed_tracks?.slice(0, 5)?.join(","),
+        limit: options.limit,
+      };
+
       const request = await this.client.get<Response>(`/recommendations`, {
-        params: {
-          seed_tracks: options.seed_tracks?.slice(0, 5)?.join(","),
-          seed_genres: options.seed_genres?.slice(0, 5)?.join(","),
-          seed_artists: options.seed_artists?.slice(0, 5)?.join(","),
-          limit: options.limit,
-        },
+        params,
       });
-      console.log(
-        `get recommended tracks`,
-        options,
-        request.data.tracks.length
-      );
+      console.log(`get recommended tracks`, params, request.data.tracks.length);
+      cacheRecommendations[key] = request.data.tracks;
+
       return request.data.tracks || [];
     } catch (error: any) {
       console.log({ error: JSON.stringify(error.headers) });

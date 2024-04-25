@@ -179,7 +179,7 @@ export function Player({ token }: Props) {
       )}
 
       <AnimatePresence>
-        {deviceId && !isPaused && (
+        {deviceId && currentTrack?.name && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
