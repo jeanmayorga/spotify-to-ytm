@@ -31,7 +31,7 @@ export default async function Page() {
             />
           ))}
         </ScrollArea>
-        <ScrollArea className="h-96 w-full">
+        <ScrollArea className="h-96 w-full relative">
           <TrackListRecommend uris={tracks.map((t) => t.id)} />
         </ScrollArea>
       </section>
