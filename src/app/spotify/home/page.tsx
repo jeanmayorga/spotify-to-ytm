@@ -17,13 +17,16 @@ export default async function Page() {
       <SectionTitle title="Your recently played songs" />
       <section className="mb-8 grid grid-cols-2 gap-2">
         <ScrollArea className="h-96 w-full">
+          {/* <div className="border-b uppercase text-xs font-bold mb-4 text-gray-600">
+            Song
+          </div> */}
           {tracks.map((track, index) => (
             <TrackItem
               id={track.id}
               key={index}
               index={index}
               name={track.name}
-              imageUrl={track.album?.images[2].url}
+              imageUrl={track.album?.images?.[2]?.url}
               artists={track.artists}
               duration={track.duration_ms}
               playedAt={track.played_at}

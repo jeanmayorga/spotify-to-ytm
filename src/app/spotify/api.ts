@@ -65,7 +65,7 @@ export class SpotifyApi {
   async getProfile() {
     try {
       const request = await this.client.get<UserProfile>(`/me`);
-      console.log(`get profile`, request.data.id);
+      console.log(`get profile`, request?.data?.id);
       return request.data;
     } catch (error: any) {
       console.log(`error get profile`, error?.response?.data);

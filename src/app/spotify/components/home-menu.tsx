@@ -37,14 +37,14 @@ export function HomeMenu() {
           Top songs
         </Button>
       </Link>
-      <Link href="/spotify/home/recommend-songs">
+      {/* <Link href="/spotify/home/recommend-songs">
         <Button
           variant={isTopTracks ? "secondary" : "ghost"}
           className="rounded-full"
         >
           Recommend songs
         </Button>
-      </Link>
+      </Link> */}
     </div>
   );
 }

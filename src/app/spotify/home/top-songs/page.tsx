@@ -23,7 +23,7 @@ export default async function Page() {
               key={index}
               index={index}
               name={track.name}
-              imageUrl={track.album?.images[2].url}
+              imageUrl={track.album?.images?.[2]?.url}
               artists={track.artists}
               duration={track.duration_ms}
               playedAt={track.played_at}

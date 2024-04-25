@@ -187,7 +187,7 @@ export function Player({ token }: Props) {
           >
             <div className="absolute w-full scale-105 bottom-0 blur-3xl z-0">
               <img
-                src={currentTrack?.album?.images?.[1].url}
+                src={currentTrack?.album?.images?.[1]?.url}
                 className="w-full"
               />
             </div>

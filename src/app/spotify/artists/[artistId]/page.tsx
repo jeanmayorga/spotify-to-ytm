@@ -36,12 +36,12 @@ export default async function Artist({ params }: Props) {
     <>
       <div className="relative bg-slate-900">
         <div className="absolute w-full scale-105 bottom-0 blur-3xl z-0">
-          <img src={artist?.images[0].url} className="w-full" />
+          <img src={artist?.images?.[0]?.url} className="w-full" />
         </div>
         <div className="absolute top-0 left-0 bg-gradient-to-t from-black/20 to-black/10 w-full h-full z-10" />
         <div className="py-8 px-12 flex items-center space-x-4 z-20 relative">
           <img
-            src={artist?.images[0].url}
+            src={artist?.images?.[0]?.url}
             className="shadow-2xl w-[204px] h-[204px] drop-shadow-md rounded aspect-square"
           />
           <div className="flex flex-col justify-end ">

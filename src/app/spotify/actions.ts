@@ -52,14 +52,6 @@ export async function play(options?: {
   await spotifyApi.play(options);
 }
 
-export async function getRecommendedTracks(options: { seed_tracks: string[] }) {
-  const spotifyAcessTokenCookie = cookies().get("spotify-access-token");
-  const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);
-
-  const tracks = await spotifyApi.getRecommendedTracks(options);
-  return tracks;
-}
-
 export async function getPlayerDevices() {
   const spotifyAcessTokenCookie = cookies().get("spotify-access-token");
   const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);

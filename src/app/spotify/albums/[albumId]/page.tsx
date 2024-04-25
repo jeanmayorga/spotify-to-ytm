@@ -28,12 +28,12 @@ export default async function Playlist({ params }: Props) {
     <>
       <div className="relative bg-slate-900">
         <div className="absolute w-full scale-105 bottom-0 blur-3xl z-0">
-          <img src={album?.images[2].url} className="w-full" />
+          <img src={album?.images?.[2]?.url} className="w-full" />
         </div>
         <div className="absolute top-0 left-0 bg-gradient-to-t from-black/20 to-black/10 w-full h-full z-10" />
         <div className="py-8 px-12 grid grid-cols-6 gap-4 z-20 relative">
           <img
-            src={album?.images[0].url}
+            src={album?.images?.[0]?.url}
             className="shadow-2xl w-[204px] h-[204px] drop-shadow-md rounded"
           />
           <div className="col-span-5 flex flex-col justify-end ">
