@@ -41,7 +41,9 @@ export function TrackItem({
 
   async function onPlay() {
     if (isPlaying) return;
-    await play({ uris: [`spotify:track:${id}`] });
+    await play({
+      uris: [`spotify:track:${id}`],
+    });
   }
 
   return (
