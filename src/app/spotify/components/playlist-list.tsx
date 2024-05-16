@@ -6,7 +6,6 @@ interface Props {
   playlists?: Playlist[];
 }
 export function PlaylistList({ playlists }: Props) {
-  console.log({ playlists });
   return (
     <section className="mb-8">
       <section className="grid grid-cols-7">

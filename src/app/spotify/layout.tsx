@@ -18,11 +18,11 @@ export default async function RootLayout({
 
   return (
     <main className="grid grid-cols-12 px-0 bg-black">
-      <div className="col-span-9 relative overflow-hidden overflow-y-visible transition-all rounded-lg">
+      <div className="xl:col-span-9 col-span-12 relative overflow-hidden overflow-y-visible transition-all rounded-lg">
         <Header profile={profile} />
         {children}
       </div>
-      <div className="col-span-3 border-l border-gray-950">
+      <div className="xl:col-span-3 xl:block hidden border-l border-gray-950">
         <div className="py-8 px-6">
           <Player token={spotifyAcessTokenCookie?.value} />
         </div>

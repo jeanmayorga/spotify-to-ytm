@@ -3,8 +3,8 @@ import { HomeMenu } from "../components/home-menu";
 import { SpotifyApi } from "../api";
 import { SectionTitle } from "../components/section-title";
 import { PlaylistList } from "../components/playlist-list";
-import { AlbumsList } from "../components/albums-list";
-import { Input } from "~/components/ui/input";
+import Link from "next/link";
+import { SearchIcon } from "lucide-react";
 
 interface Props {
   children: React.ReactNode;
@@ -22,10 +22,14 @@ export default async function Layout({ children }: Props) {
   return (
     <div className="px-12">
       <div className="mb-4">
-        <Input
-          className="rounded-full w-80"
-          placeholder="What do you want to play?"
-        />
+        <Link
+          prefetch
+          href="/spotify/search"
+          className="rounded-full w-80 flex h-10 border border-input bg-background pr-3 pl-9 py-[9px] text-sm ring-offset-background text-muted-foreground relative"
+        >
+          <SearchIcon className="w-4 h-4 absolute top-[10px] left-3" />
+          What do you want to play?
+        </Link>
       </div>
       <HomeMenu />
 

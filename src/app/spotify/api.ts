@@ -318,6 +318,8 @@ export class SpotifyApi {
       tracks: ListResponse<Track>;
     }
     try {
+      if (!options.q.length) {
+      }
       const request = await this.client.get<Response>("/search", {
         params: {
           q: options.q,
