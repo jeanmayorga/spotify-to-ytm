@@ -69,10 +69,10 @@ export default async function Artist({ params }: Props) {
       </div>
 
       <div className="relative z-20 px-12 py-8 bg-black">
-        <section className="grid grid-cols-4 gap-4 mb-8">
+        <section className="grid md:grid-cols-4 grid-cols-1 gap-4 mb-8">
           <section className=" col-span-3">
             <SectionTitle title="Featured Songs" />
-            <ScrollArea className="h-80 w-full">
+            <ScrollArea className="md:h-80 w-full">
               {topTracks.map((track, index) => (
                 <TrackItem
                   id={track.id}
@@ -84,13 +84,14 @@ export default async function Artist({ params }: Props) {
                   albumName={track.album?.name}
                   artists={track.artists}
                   duration={track.duration_ms}
+                  uris={topTracks.map((t) => t.id)}
                 />
               ))}
             </ScrollArea>
           </section>
           <section>
             <SectionTitle title="Similar Artists" />
-            <ScrollArea className="h-80 w-full">
+            <ScrollArea className="md:h-80 w-full">
               {relatedArtists.map((relatedArtist) => (
                 <ArtistItem
                   key={relatedArtist.id}
@@ -106,7 +107,7 @@ export default async function Artist({ params }: Props) {
 
         <section className="mb-8">
           <SectionTitle title="Playlists" />
-          <section className="grid grid-cols-7">
+          <section className="grid md:grid-cols-7 grid-cols-2">
             {search.playlists.items?.map((playlist) => (
               <PlaylistItem
                 key={playlist.id}

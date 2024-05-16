@@ -258,7 +258,6 @@ export function Player({ token }: Props) {
                   size="icon"
                   variant="ghost"
                   onClick={() => player?.previousTrack()}
-                  disabled
                 >
                   <SkipBackIcon />
                 </Button>
@@ -274,7 +273,6 @@ export function Player({ token }: Props) {
                   size="icon"
                   variant="ghost"
                   onClick={() => player?.nextTrack()}
-                  disabled
                 >
                   <SkipForwardIcon />
                 </Button>

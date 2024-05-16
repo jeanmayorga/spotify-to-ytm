@@ -25,6 +25,7 @@ export async function TrackListRecommend({ uris }: Props) {
           artists={track.artists}
           duration={track.duration_ms}
           isRecommended
+          uris={recommendedSongs.map((t) => t.id)}
         />
       ))}
     </>

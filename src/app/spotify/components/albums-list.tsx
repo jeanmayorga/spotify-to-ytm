@@ -14,7 +14,7 @@ export function AlbumsList({ title, albums }: Props) {
           {title || "Albums"}
         </h2>
       </div>
-      <section className="grid grid-cols-7">
+      <section className="grid md:grid-cols-7 grid-cols-2">
         {albums?.map((album) => (
           <Link
             href={`/spotify/albums/${album?.id}`}

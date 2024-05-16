@@ -15,8 +15,12 @@ export default async function Page() {
   return (
     <>
       <SectionTitle title="Your liked songs" />
-      <section className="mb-8 grid grid-cols-2 gap-2">
-        <ScrollArea className="h-96 w-full">
+      <section className="mb-8 md:grid md:grid-cols-2 gap-2">
+        <ScrollArea className="md:h-96 w-full md:mb-0 mb-8">
+          <div className="border-b uppercase text-xs font-bold mb-4 text-gray-500 py-1 flex items-center">
+            <div className="px-2">#</div>
+            <div className="px-3">Songs</div>
+          </div>
           {tracks.map((track, index) => (
             <TrackItem
               id={track.id}
@@ -28,10 +32,15 @@ export default async function Page() {
               duration={track.duration_ms}
               playedAt={track.played_at}
               addedAt={track.added_at}
+              uris={tracks.map((t) => t.id)}
             />
           ))}
         </ScrollArea>
-        <ScrollArea className="h-96 w-full">
+        <ScrollArea className="md:h-96 w-full">
+          <div className="border-b uppercase text-xs font-bold mb-4 text-gray-500 py-1 flex items-center">
+            <div className="px-2">#</div>
+            <div className="px-3">Recommended Songs</div>
+          </div>
           <TrackListRecommend uris={tracks.map((t) => t.id)} />
         </ScrollArea>
       </section>

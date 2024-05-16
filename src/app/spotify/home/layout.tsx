@@ -25,7 +25,7 @@ export default async function Layout({ children }: Props) {
         <Link
           prefetch
           href="/spotify/search"
-          className="rounded-full w-80 flex h-10 border border-input bg-background pr-3 pl-9 py-[9px] text-sm ring-offset-background text-muted-foreground relative"
+          className="rounded-full md:w-80 w-full flex h-10 border border-input bg-background pr-3 pl-9 py-[9px] text-sm ring-offset-background text-muted-foreground relative"
         >
           <SearchIcon className="w-4 h-4 absolute top-[10px] left-3" />
           What do you want to play?

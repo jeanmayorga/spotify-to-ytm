@@ -8,7 +8,7 @@ interface Props {
 export function PlaylistList({ playlists }: Props) {
   return (
     <section className="mb-8">
-      <section className="grid grid-cols-7">
+      <section className="grid md:grid-cols-7 grid-cols-2">
         {playlists?.map((playlist) => (
           <PlaylistItem
             key={playlist.id}

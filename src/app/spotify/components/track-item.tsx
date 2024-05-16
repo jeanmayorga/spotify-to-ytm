@@ -3,12 +3,20 @@
 import { formatDistance } from "date-fns";
 import { Artist } from "../types";
 import { msConversion } from "../utils";
-import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { play } from "../actions";
 import { Play } from "lucide-react";
 import { useCurrentTrack } from "../store";
 import { cn } from "~/lib/utils";
+
+function getNextUris(uris: string[], id: string) {
+  console.log({ uris, id });
+  const index = uris.indexOf(id);
+  if (index === -1) return [];
+  const resultArray = uris.slice(index);
+  const prefixedArray = resultArray.map((item) => `spotify:track:${item}`);
+  return prefixedArray;
+}
 
 interface TrackItemProps {
   index?: number;
@@ -22,6 +30,7 @@ interface TrackItemProps {
   addedAt?: string;
   playedAt?: string;
   isRecommended?: boolean;
+  uris?: string[];
 }
 export function TrackItem({
   index,
@@ -35,15 +44,22 @@ export function TrackItem({
   addedAt,
   playedAt,
   isRecommended,
+  uris,
 }: TrackItemProps) {
   const { track } = useCurrentTrack();
   const isPlaying = track?.id === id;
 
   async function onPlay() {
     if (isPlaying) return;
-    await play({
-      uris: [`spotify:track:${id}`],
-    });
+    if (uris && uris.length > 0) {
+      await play({
+        uris: getNextUris(uris, id),
+      });
+    } else {
+      await play({
+        uris: [`spotify:track:${id}`],
+      });
+    }
   }
 
   return (
@@ -112,7 +128,7 @@ export function TrackItem({
         {albumName && albumId && (
           <Link
             href={`/spotify/albums/${albumId}`}
-            className="mr-4 text-xs font-extralight overflow-hidden truncate w-52 hover:underline hover:text-white"
+            className="mr-4 text-xs font-extralight overflow-hidden truncate w-52 hover:underline hover:text-white  md:block hidden"
           >
             {albumName}
           </Link>
@@ -120,19 +136,19 @@ export function TrackItem({
       </div>
       <div className="flex items-center">
         {addedAt && (
-          <div className="mr-4 text-xs font-extralight overflow-hidden truncate w-40">
+          <div className="mr-4 text-xs font-extralight overflow-hidden truncate w-40  md:block hidden">
             added {formatDistance(addedAt, new Date(), { addSuffix: true })}
           </div>
         )}
 
         {playedAt && (
-          <div className="mr-4 text-xs font-extralight overflow-hidden truncate w-40">
+          <div className="mr-4 text-xs font-extralight overflow-hidden truncate w-40  md:block hidden">
             played {formatDistance(playedAt, new Date(), { addSuffix: true })}
           </div>
         )}
 
         {isRecommended && (
-          <div className="mr-4 text-xs font-extralight overflow-hidden truncate w-40">
+          <div className="mr-4 text-xs font-extralight overflow-hidden truncate w-40 md:block hidden">
             Recommended
           </div>
         )}
