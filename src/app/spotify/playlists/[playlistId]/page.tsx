@@ -1,9 +1,6 @@
 import { cookies } from "next/headers";
 import { SpotifyApi } from "../../api";
 import { TrackItem } from "../../components/track-item";
-import { Play, Sparkles } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { play } from "../../actions";
 
 interface Props {
   params: { playlistId: string };
@@ -14,12 +11,6 @@ export default async function Playlist({ params }: Props) {
 
   const playlist = await spotifyApi.getPlaylist({ id: params.playlistId });
   const tracks = playlist?.tracks.items.map((items) => items.track) || [];
-
-  async function onPlay() {
-    "use server";
-
-    play({ context_uri: `spotify:playlist:${params.playlistId}` });
-  }
 
   return (
     <>
@@ -55,19 +46,10 @@ export default async function Playlist({ params }: Props) {
         </div>
       </div>
       <div className="relative z-20 px-12 py-8 bg-black">
-        {/* <div className="mb-8 flex items-center space-x-2">
-          <form action={onPlay}>
-            <Button className="rounded-full" variant="secondary">
-              <Play className="mr-1" /> Play playlist
-            </Button>
-          </form>
-          <form action={onPlay}>
-            <Button className="rounded-full" variant="secondary">
-              <Sparkles className="mr-1" /> Get recommended songs
-            </Button>
-          </form>
-        </div> */}
-
+        <div className="border-b uppercase text-xs font-bold mb-4 text-gray-500 py-1 flex items-center">
+          <div className="px-2">#</div>
+          <div className="px-3">Songs</div>
+        </div>
         {tracks.map((track, index) => (
           <TrackItem
             id={track.id}
@@ -81,6 +63,7 @@ export default async function Playlist({ params }: Props) {
             duration={track.duration_ms}
             playedAt={track.played_at}
             addedAt={track.added_at}
+            uris={tracks.map((t) => t.id)}
           />
         ))}
       </div>

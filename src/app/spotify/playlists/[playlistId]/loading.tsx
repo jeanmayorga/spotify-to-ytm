@@ -26,6 +26,10 @@ export default async function PlaylistLoading() {
         </div>
       </div>
       <div className="relative z-20 px-12 py-8 bg-black">
+        <div className="border-b uppercase text-xs font-bold mb-4 text-gray-500 py-1 flex items-center">
+          <div className="px-2">#</div>
+          <div className="px-3">Songs</div>
+        </div>
         <TrackListSkeleton />
       </div>
     </>
