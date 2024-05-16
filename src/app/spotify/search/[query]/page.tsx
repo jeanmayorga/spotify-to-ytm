@@ -45,6 +45,7 @@ export default async function Search({ params }: Props) {
                   albumName={track.album?.name}
                   artists={track.artists}
                   duration={track.duration_ms}
+                  uris={search?.tracks?.items.map((t) => t.id)}
                 />
               ))}
             </ScrollArea>

@@ -26,7 +26,7 @@ export function SearchInput({ className }: Props) {
   const cancelSearch = () => router.push("/spotify");
 
   return (
-    <div className={cn("relative block", className)}>
+    <div className={cn("relative md:inline-block block", className)}>
       <SearchIcon className="w-4 h-4 absolute top-[11px] left-[13px] text-muted-foreground" />
 
       <Input
