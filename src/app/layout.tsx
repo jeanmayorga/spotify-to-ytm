@@ -26,7 +26,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <div className="container px-0 max-w-[1500px]">{children}</div>
+        <div className="container px-0 max-w-[1600px]">{children}</div>
       </body>
     </html>
   );
