@@ -5,12 +5,18 @@ import { SectionTitle } from "../components/section-title";
 import { TrackItem } from "../components/track-item";
 import { TrackListRecommend } from "../components/track-list-recommend";
 import { Track } from "../types";
+import { uniqBy } from "lodash";
 
 export default async function Page() {
   const spotifyAcessTokenCookie = cookies().get("spotify-access-token");
   const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);
 
-  let tracks: Track[] = await spotifyApi.getRecentlyPlayedTracks({ limit: 25 });
+  const tracks: Track[] = await spotifyApi.getRecentlyPlayedTracks({
+    limit: 25,
+  });
+  const removedRepeatedTracks = uniqBy(tracks, (track) => {
+    return track.id;
+  });
 
   return (
     <>
@@ -22,7 +28,7 @@ export default async function Page() {
             <div className="px-3">Songs</div>
           </div>
           <ScrollArea className="md:h-96 w-full md:mb-0 mb-8">
-            {tracks.map((track, index) => (
+            {removedRepeatedTracks.map((track, index) => (
               <TrackItem
                 id={track.id}
                 key={index}
@@ -45,7 +51,7 @@ export default async function Page() {
             <div className="px-3">Recommended Songs</div>
           </div>
           <ScrollArea className="md:h-96 w-full relative">
-            <TrackListRecommend uris={tracks.map((t) => t.id)} />
+            <TrackListRecommend uris={removedRepeatedTracks.map((t) => t.id)} />
           </ScrollArea>
         </div>
       </section>
