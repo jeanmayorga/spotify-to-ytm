@@ -31,6 +31,7 @@ interface TrackItemProps {
   playedAt?: string;
   isRecommended?: boolean;
   uris?: string[];
+  isSeed?: boolean;
 }
 export function TrackItem({
   index,
@@ -45,6 +46,7 @@ export function TrackItem({
   playedAt,
   isRecommended,
   uris,
+  isSeed,
 }: TrackItemProps) {
   const { track } = useCurrentTrack();
   const isPlaying = track?.id === id;
@@ -64,7 +66,10 @@ export function TrackItem({
 
   return (
     <div
-      className="flex items-center justify-between text-white hover:bg-neutral-800 active:bg-neutral-900 py-1 px-2 rounded transition-all group select-none"
+      className={cn(
+        "flex items-center justify-between text-white hover:bg-neutral-800 active:bg-neutral-900 py-1 px-2 rounded transition-all group select-none",
+        isSeed && "bg-gray-950 rounded-none"
+      )}
       onDoubleClick={onPlay}
     >
       <div className="flex items-center">
