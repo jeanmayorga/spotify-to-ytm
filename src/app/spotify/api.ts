@@ -3,7 +3,6 @@ import {
   UserProfile,
   Playlist,
   Track,
-  Search,
   ListResponse,
   Artist,
   Album,
@@ -58,6 +57,55 @@ export class SpotifyApi {
     } catch (error: any) {
       console.log({ error: JSON.stringify(error.headers) });
       console.log(`get recommended tracks`, error?.response?.data);
+      return [];
+    }
+  }
+
+  async insertSavedTracks(options: { ids: string[] }) {
+    try {
+      await this.client.put("/me/tracks", null, {
+        params: {
+          ids: options.ids.join(","),
+        },
+      });
+
+      console.log(`insert saved tracks`, options);
+      return true;
+    } catch (error: any) {
+      console.log(`insert saved tracks`, error?.response?.data);
+      return false;
+    }
+  }
+
+  async removeSavedTracks(options: { ids: string[] }) {
+    try {
+      await this.client.delete("/me/tracks", {
+        params: {
+          ids: options.ids.join(","),
+        },
+      });
+
+      console.log(`insert remove tracks`, options);
+      return true;
+    } catch (error: any) {
+      console.log(`insert remove tracks`, error?.response?.data);
+      return false;
+    }
+  }
+
+  async checkSavedTracks(options: { ids: string[] }) {
+    try {
+      const request = await this.client.get<boolean[]>("/me/tracks/contains", {
+        params: {
+          ids: options.ids.join(","),
+        },
+      });
+      const response = request.data;
+
+      console.log(`check saved tracks`, options);
+      return response;
+    } catch (error: any) {
+      console.log(`check saved tracks`, error?.response?.data);
       return [];
     }
   }

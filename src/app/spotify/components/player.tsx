@@ -10,12 +10,24 @@ import {
 } from "~/components/ui/select";
 import { useEffect, useState } from "react";
 import { Device, Track } from "../types";
-import { getPlayerDevices, setPlayerDeviceId } from "../actions";
-import { Pause, Play, SkipBackIcon, SkipForwardIcon } from "lucide-react";
+import {
+  checkSavedTracks,
+  getPlayerDevices,
+  insertSavedTracks,
+  removeSavedTracks,
+  setPlayerDeviceId,
+} from "../actions";
+import {
+  CheckIcon,
+  Pause,
+  Play,
+  PlusIcon,
+  SkipBackIcon,
+  SkipForwardIcon,
+} from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Slider } from "~/components/ui/slider";
 import { msConversion } from "../utils";
-import { TrackItem } from "./track-item";
 import { useCurrentTrack } from "../store";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
@@ -81,6 +93,7 @@ export function Player({ token }: Props) {
   const [devices, setDevices] = useState<Device[]>([]);
   const [deviceId, setDeviceId] = useState<string>("");
   const [context, setContext] = useState<StateContext | undefined>();
+  const [isSavedTrack, setIsSavedTrack] = useState<boolean>(false);
 
   useEffect(() => {
     function loadPlayer() {
@@ -154,6 +167,17 @@ export function Player({ token }: Props) {
     return () => clearInterval(interval);
   }, [duration, isPaused]);
 
+  useEffect(() => {
+    async function runCheckSavedTracks() {
+      if (currentTrack?.id) {
+        const ids = [currentTrack.id];
+        const savedTracks = await checkSavedTracks({ ids });
+        setIsSavedTrack(savedTracks[0]);
+      }
+    }
+    runCheckSavedTracks();
+  }, [currentTrack?.id]);
+
   return (
     <>
       {devices.length > 0 && (
@@ -207,12 +231,39 @@ export function Player({ token }: Props) {
               ) : (
                 <div className="shadow-2xl w-full aspect-square drop-shadow-md rounded-xl mb-6" />
               )}
-              <h3 className="font-bold text-2xl text-white drop-shadow-md">
-                {currentTrack?.name}
-              </h3>
+              <div className="relative">
+                <h3 className="font-bold text-xl text-white drop-shadow-md pr-12">
+                  {currentTrack?.name}
+                </h3>
+                {isSavedTrack ? (
+                  <Button
+                    className="rounded-full absolute right-0 top-0"
+                    size="icon"
+                    variant="ghost"
+                    onClick={async () => {
+                      await removeSavedTracks({ ids: [currentTrack.id] });
+                      setIsSavedTrack(false);
+                    }}
+                  >
+                    <CheckIcon />
+                  </Button>
+                ) : (
+                  <Button
+                    className="rounded-full absolute right-0 top-0"
+                    size="icon"
+                    variant="default"
+                    onClick={async () => {
+                      await insertSavedTracks({ ids: [currentTrack.id] });
+                      setIsSavedTrack(true);
+                    }}
+                  >
+                    <PlusIcon />
+                  </Button>
+                )}
+              </div>
 
               {currentTrack?.artists && currentTrack?.artists?.length > 0 && (
-                <div className="text-gray-300 text-base drop-shadow-md mb-6">
+                <div className="text-gray-300 text-base drop-shadow-md mb-6 pr-12">
                   {currentTrack?.artists.map((artist) => (
                     <Link
                       href={`/spotify/artists/${

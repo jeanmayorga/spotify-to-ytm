@@ -34,7 +34,7 @@ export async function signIn() {
   params.append("response_type", "code");
   params.append(
     "scope",
-    "user-read-private playlist-read-private playlist-read-collaborative user-read-recently-played user-library-read user-modify-playback-state user-top-read streaming user-read-playback-state"
+    "user-read-private playlist-read-private playlist-read-collaborative user-read-recently-played user-library-read user-modify-playback-state user-top-read streaming user-read-playback-state user-library-modify"
   );
   params.append("code_challenge_method", "S256");
   params.append("code_challenge", challenge);
@@ -65,4 +65,27 @@ export async function setPlayerDeviceId(options: { device_ids: string[] }) {
   const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);
 
   await spotifyApi.setPlayerDevice(options);
+}
+
+export async function checkSavedTracks(options: { ids: string[] }) {
+  const spotifyAcessTokenCookie = cookies().get("spotify-access-token");
+  const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);
+
+  console.log("run this");
+
+  return spotifyApi.checkSavedTracks(options);
+}
+
+export async function insertSavedTracks(options: { ids: string[] }) {
+  const spotifyAcessTokenCookie = cookies().get("spotify-access-token");
+  const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);
+
+  await spotifyApi.insertSavedTracks(options);
+}
+
+export async function removeSavedTracks(options: { ids: string[] }) {
+  const spotifyAcessTokenCookie = cookies().get("spotify-access-token");
+  const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);
+
+  await spotifyApi.removeSavedTracks(options);
 }
