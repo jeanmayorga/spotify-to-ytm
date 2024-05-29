@@ -178,38 +178,46 @@ export function Player({ token }: Props) {
     runCheckSavedTracks();
   }, [currentTrack?.id]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        const newPosition = position - 10000;
+        console.log({ lr: "left", newPosition });
+        if (newPosition <= 0) {
+          return player?.seek(0);
+        }
+
+        return player?.seek(newPosition);
+      }
+      if (event.key === "ArrowRight") {
+        const newPosition = position + 10000;
+        console.log({ lr: "right", newPosition });
+        if (newPosition >= duration) {
+          return player?.seek(duration);
+        }
+
+        return player?.seek(newPosition);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [position, duration, player, currentTrack?.id]);
+
   return (
     <>
-      {devices.length > 0 && (
-        <Select
-          value={deviceId}
-          onValueChange={async (currentDeviceId) => {
-            setDeviceId(currentDeviceId);
-            await setPlayerDeviceId({ device_ids: [currentDeviceId] });
-          }}
-        >
-          <SelectTrigger className="w-full rounded-xl mb-8">
-            <SelectValue placeholder="Spotify devices" />
-          </SelectTrigger>
-          <SelectContent>
-            {devices.map((device) => (
-              <SelectItem value={device.id} key={device.id}>
-                {device.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )}
-
       <AnimatePresence>
         {deviceId && currentTrack?.name && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="relative bg-black border border-gray-800 overflow-hidden rounded-xl mb-8"
+            className="relative bg-black overflow-hidden mb-8"
           >
-            <div className="absolute w-full scale-105 bottom-0 blur-3xl z-0">
+            <div className="absolute w-full scale-105 top-0 blur-3xl z-0">
               <img
                 src={currentTrack?.album?.images?.[1]?.url}
                 className="w-full"
@@ -332,6 +340,27 @@ export function Player({ token }: Props) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {devices.length > 0 && (
+        <Select
+          value={deviceId}
+          onValueChange={async (currentDeviceId) => {
+            setDeviceId(currentDeviceId);
+            await setPlayerDeviceId({ device_ids: [currentDeviceId] });
+          }}
+        >
+          <SelectTrigger className="w-full rounded-xl mb-8">
+            <SelectValue placeholder="Spotify devices" />
+          </SelectTrigger>
+          <SelectContent>
+            {devices.map((device) => (
+              <SelectItem value={device.id} key={device.id}>
+                {device.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
     </>
   );
 }

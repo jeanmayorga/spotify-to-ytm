@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 
 interface SpotifyAccessTokenResponse {
   access_token: string;
+  refresh_token: string;
   token_type: string;
   expires_in: number;
 }
@@ -38,8 +39,12 @@ export async function GET(request: NextRequest) {
       },
     });
     const accessToken = response.data.access_token;
+    const refreshToken = response.data.refresh_token;
 
     cookies().set("spotify-access-token", accessToken, {
+      secure: true,
+    });
+    cookies().set("spotify-refresh-token", refreshToken, {
       secure: true,
     });
   } catch (error: any) {

@@ -22,10 +22,8 @@ export default async function RootLayout({
         <Header profile={profile} />
         {children}
       </div>
-      <div className="xl:col-span-3 xl:block hidden border-l border-gray-950">
-        <div className="py-8 px-6">
-          <Player token={spotifyAcessTokenCookie?.value} />
-        </div>
+      <div className="xl:col-span-3 xl:block hidden">
+        <Player token={spotifyAcessTokenCookie?.value} />
       </div>
     </main>
   );

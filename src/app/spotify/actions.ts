@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { SpotifyApi } from "./api";
 import { generateCodeChallenge, generateCodeVerifier } from "./utils";
 import { config } from "../config";
+import axios from "axios";
 
 export async function signOut() {
   cookies().delete("spotify-access-token");
@@ -40,6 +41,37 @@ export async function signIn() {
   params.append("code_challenge", challenge);
 
   redirect(`https://accounts.spotify.com/authorize?${params.toString()}`);
+}
+
+export async function refreshToken() {
+  console.log("refreshing token");
+  const spotifyRefreshTokenCookie = cookies().get("spotify-refresh-token");
+
+  try {
+    const request = await axios.post(
+      "https://accounts.spotify.com/api/token",
+      {
+        grant_type: "refresh_token",
+        refresh_token: spotifyRefreshTokenCookie?.value,
+        client_id: config.X_SPOTIFY_CLIENT_ID,
+      },
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+    const response = request.data;
+    console.log({ access_token_1: response.access_token });
+
+    return response.access_token as string;
+  } catch (error: any) {
+    console.log(
+      "error refreshing token ->",
+      error?.response?.data?.error_description
+    );
+    return null;
+  }
 }
 
 export async function play(options?: {

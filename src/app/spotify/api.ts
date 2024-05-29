@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 import {
   UserProfile,
   Playlist,
@@ -10,6 +10,7 @@ import {
   SearchType,
   Device,
 } from "./types";
+import { refreshToken } from "./actions";
 
 const cacheRecommendations: any = {};
 
@@ -24,6 +25,20 @@ export class SpotifyApi {
         Authorization: `Bearer ${token}`,
       },
     });
+    this.client.interceptors.response.use(
+      function (response) {
+        return response;
+      },
+      async function (error: AxiosError) {
+        if (error?.response?.status === 401 && error.config) {
+          console.log("401 error");
+          const newAccessToken = await refreshToken();
+          error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+          return axios.request(error.config);
+        }
+        return Promise.reject(error);
+      }
+    );
   }
 
   async getRecommendedTracks(options: {
