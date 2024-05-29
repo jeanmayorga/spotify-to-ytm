@@ -342,7 +342,7 @@ export function Player({ token }: Props) {
       </AnimatePresence>
 
       {devices.length > 0 && (
-        <div className="my-8 mx-4">
+        <div className="my-8 mx-6">
           <Select
             value={deviceId}
             onValueChange={async (currentDeviceId) => {

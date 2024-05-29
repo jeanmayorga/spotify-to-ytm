@@ -98,10 +98,10 @@ export class SpotifyApi {
         },
       });
 
-      console.log(`insert saved tracks`, options);
+      logger.info({ options }, "insertSavedTracks");
       return true;
     } catch (error: any) {
-      console.log(`insert saved tracks`, error?.response?.data);
+      logger.error(error?.response?.data, "insertSavedTracks");
       return false;
     }
   }
@@ -114,10 +114,10 @@ export class SpotifyApi {
         },
       });
 
-      console.log(`insert remove tracks`, options);
+      logger.info({ options }, "removeSavedTracks");
       return true;
     } catch (error: any) {
-      console.log(`insert remove tracks`, error?.response?.data);
+      logger.error(error?.response?.data, "removeSavedTracks");
       return false;
     }
   }
@@ -131,10 +131,10 @@ export class SpotifyApi {
       });
       const response = request.data;
 
-      console.log(`check saved tracks`, options);
+      logger.info({ options }, "checkSavedTracks");
       return response;
     } catch (error: any) {
-      console.log(`check saved tracks`, error?.response?.data);
+      logger.error(error?.response?.data, "checkSavedTracks");
       return [];
     }
   }
@@ -168,10 +168,17 @@ export class SpotifyApi {
           },
         }
       );
-      console.log(`get profile top tracks`, options, request.data.items.length);
+
+      logger.info(
+        {
+          options,
+          response: request.data.items.length,
+        },
+        "getProfileTopTracks"
+      );
       return request.data.items || [];
     } catch (error: any) {
-      console.log(`get profile top tracks`, error?.response?.data);
+      logger.error(error?.response?.data, "getProfileTopTracks");
       return [];
     }
   }
@@ -207,28 +214,14 @@ export class SpotifyApi {
           params: { limit: options?.limit },
         }
       );
+
+      logger.info(
+        { options, response: request.data.playlists.items.length },
+        "getProfileFeaturePlaylists"
+      );
       return request.data.playlists.items || [];
     } catch (error: any) {
-      console.log(`error get profile playlist`, error?.response?.data);
-      return [];
-    }
-  }
-
-  async getProfileSavedAlbums(options?: { limit?: number }) {
-    try {
-      const request = await this.client.get<ListResponse<AlbumOut>>(
-        `/me/albums`,
-        {
-          params: { limit: options?.limit },
-        }
-      );
-      console.log(`get profile albums`, request.data.items.length);
-      const mappedAlbums = request.data.items.map((item) => ({
-        ...item.album,
-      }));
-      return mappedAlbums || [];
-    } catch (error: any) {
-      console.log(`error get profile albums`, error?.response?.data);
+      logger.error(error?.response?.data, "getProfileFeaturePlaylists");
       return [];
     }
   }
@@ -276,10 +269,10 @@ export class SpotifyApi {
           added_at: item.added_at,
         })) || [];
 
-      console.log(`get saved tracks`, mapped.length);
+      logger.info({ options, response: mapped.length }, "getSavedTracks");
       return mapped || [];
     } catch (error: any) {
-      console.log(`error get saved tracks`, error?.response?.data);
+      logger.error(error?.response?.data, "getSavedTracks");
       return [];
     }
   }
@@ -289,10 +282,19 @@ export class SpotifyApi {
       const request = await this.client.get<Playlist>(
         `/playlists/${options.id}`
       );
-      console.log(`get playlist ${options.id}`, request.data.name);
+      logger.info(
+        {
+          options,
+          response: {
+            id: request.data.id,
+            name: request.data.name,
+          },
+        },
+        "getPlaylist"
+      );
       return request.data;
     } catch (error: any) {
-      console.log(`error get playlist ${options.id}`, error?.response?.data);
+      logger.error(error?.response?.data, "getPlaylist");
       return undefined;
     }
   }
@@ -300,10 +302,19 @@ export class SpotifyApi {
   async getArtist(options: { id: string }) {
     try {
       const request = await this.client.get<Artist>(`/artists/${options.id}`);
-      console.log(`get artist ${options.id}`, request.data.name);
+      logger.info(
+        {
+          options,
+          response: {
+            id: request.data.id,
+            name: request.data.name,
+          },
+        },
+        "getArtist"
+      );
       return request.data;
     } catch (error: any) {
-      console.log(`error get artist ${options.id}`, error?.response?.data);
+      logger.error(error?.response?.data, "getArtist");
       return undefined;
     }
   }
@@ -315,16 +326,16 @@ export class SpotifyApi {
       const request = await this.client.get<Response>(
         `/artists/${options.id}/top-tracks`
       );
-      console.log(
-        `get artist ${options.id} tracks`,
-        request.data.tracks.length
+      logger.info(
+        {
+          options,
+          response: request.data.tracks.length,
+        },
+        "getArtistTopTracks"
       );
       return request.data.tracks || [];
     } catch (error: any) {
-      console.log(
-        `error get artist ${options.id} tracks`,
-        error?.response?.data
-      );
+      logger.error(error?.response?.data, "getArtistTopTracks");
       return [];
     }
   }
@@ -336,13 +347,16 @@ export class SpotifyApi {
           params: { limit: options.limit },
         }
       );
-      console.log(`get artist ${options.id} albums`, request.data.items.length);
+      logger.info(
+        {
+          options,
+          response: request.data.items.length,
+        },
+        "getArtistAlbums"
+      );
       return request.data.items || [];
     } catch (error: any) {
-      console.log(
-        `error get artist ${options.id} albums`,
-        error?.response?.data
-      );
+      logger.error(error?.response?.data, "getArtistAlbums");
       return [];
     }
   }
@@ -354,16 +368,16 @@ export class SpotifyApi {
       const request = await this.client.get<Response>(
         `/artists/${options.id}/related-artists`
       );
-      console.log(
-        `get artist ${options.id} related artists`,
-        request.data.artists.length
+      logger.info(
+        {
+          options,
+          response: request.data.artists.length,
+        },
+        "getArtistRelatedArtists"
       );
       return request.data.artists || [];
     } catch (error: any) {
-      console.log(
-        `error get artist ${options.id} related artists`,
-        error?.response?.data
-      );
+      logger.error(error?.response?.data, "getArtistRelatedArtists");
       return [];
     }
   }
@@ -371,10 +385,19 @@ export class SpotifyApi {
   async getAlbum(options: { id: string }) {
     try {
       const request = await this.client.get<Album>(`/albums/${options.id}`);
-      console.log(`get album ${options.id}`, request.data.name);
+      logger.info(
+        {
+          options,
+          response: {
+            id: request.data.id,
+            name: request.data.name,
+          },
+        },
+        "getAlbum"
+      );
       return request.data;
     } catch (error: any) {
-      console.log(`error get album ${options.id}`, error?.response?.data);
+      logger.error(error?.response?.data, "getAlbum");
       return undefined;
     }
   }
@@ -389,13 +412,16 @@ export class SpotifyApi {
           },
         }
       );
-      console.log(`get album ${options.id} tracks`, request.data.items.length);
+      logger.info(
+        {
+          options,
+          response: request.data.items.length,
+        },
+        "getAlbumTracks"
+      );
       return request.data.items || [];
     } catch (error: any) {
-      console.log(
-        `error get album ${options.id} tracks`,
-        error?.response?.data
-      );
+      logger.error(error?.response?.data, "getAlbumTracks");
       return [];
     }
   }
@@ -456,10 +482,10 @@ export class SpotifyApi {
   async play(options?: { context_uri?: string; uris?: string[] }) {
     try {
       await this.client.put(`/me/player/play`, options);
-      console.log(`play `, options);
+      logger.info({ options }, "play");
       return true;
     } catch (error: any) {
-      console.log(`error playing`, error?.response?.data);
+      logger.error(error?.response?.data, "play");
       return false;
     }
   }
@@ -470,20 +496,21 @@ export class SpotifyApi {
     }
     try {
       const request = await this.client.get<Response>(`/me/player/devices`);
-      console.log(`get player devices`, request.data.devices.length);
+
+      logger.info({ devices: request.data.devices.length }, "getPlayerDevices");
       return request.data.devices;
     } catch (error: any) {
-      console.log(`error get player devices`, error?.response?.data);
+      logger.error(error?.response?.data, "getPlayerDevices");
       return [];
     }
   }
   async setPlayerDevice(options: { device_ids: string[] }) {
     try {
       await this.client.put<Response>(`/me/player`, options);
-      console.log(`get player device`);
+      logger.info({ options }, "setPlayerDevice");
       return true;
     } catch (error: any) {
-      console.log(`error set player device`, error?.response?.data);
+      logger.error(error?.response?.data, "setPlayerDevice");
       return false;
     }
   }

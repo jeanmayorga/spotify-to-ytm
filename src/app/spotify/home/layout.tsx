@@ -21,7 +21,6 @@ export default async function Layout({ children }: Props) {
       type: ["playlist"],
       limit: 14,
     }),
-    // spotifyApi.getProfileSavedAlbums({ limit: 7 }),
   ]);
 
   return (
@@ -48,8 +47,6 @@ export default async function Layout({ children }: Props) {
 
       <SectionTitle title="Your top playlists" />
       <PlaylistList playlists={featurePlaylists} />
-
-      {/* <AlbumsList title="Your saved albums" albums={savedAlbums} /> */}
     </div>
   );
 }
