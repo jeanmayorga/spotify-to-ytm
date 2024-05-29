@@ -17,7 +17,7 @@ export default async function RootLayout({
   if (!profile) return redirect("/");
 
   return (
-    <main className="grid grid-cols-12 px-0 bg-black">
+    <main className="grid grid-cols-12 px-0">
       <div className="xl:col-span-9 col-span-12 relative overflow-hidden overflow-y-visible transition-all rounded-lg">
         <Header profile={profile} />
         {children}

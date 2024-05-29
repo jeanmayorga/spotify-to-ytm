@@ -13,9 +13,14 @@ export default async function Layout({ children }: Props) {
   const spotifyAcessTokenCookie = cookies().get("spotify-access-token");
   const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);
 
-  const [playlists, featurePlaylists] = await Promise.all([
+  const [playlists, featurePlaylists, ecuadorSearch] = await Promise.all([
     spotifyApi.getProfilePlaylists({ limit: 14 }),
     spotifyApi.getProfileFeaturePlaylists({ limit: 14 }),
+    spotifyApi.search({
+      q: "Ecuador",
+      type: ["playlist"],
+      limit: 14,
+    }),
     // spotifyApi.getProfileSavedAlbums({ limit: 7 }),
   ]);
 
@@ -37,6 +42,9 @@ export default async function Layout({ children }: Props) {
 
       <SectionTitle title="Your playlists" />
       <PlaylistList playlists={playlists} />
+
+      <SectionTitle title="Your country playlists" />
+      <PlaylistList playlists={ecuadorSearch.playlists.items} />
 
       <SectionTitle title="Your top playlists" />
       <PlaylistList playlists={featurePlaylists} />

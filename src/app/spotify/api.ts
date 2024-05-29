@@ -11,6 +11,7 @@ import {
   Device,
 } from "./types";
 import { refreshToken } from "./actions";
+import { logger } from "~/lib/pino";
 
 const cacheRecommendations: any = {};
 
@@ -53,7 +54,14 @@ export class SpotifyApi {
       const saved = cacheRecommendations[key];
 
       if (saved) {
-        console.log(`get cached recommended tracks`, saved.length);
+        logger.info(
+          {
+            options,
+            response: saved.length,
+            cache: true,
+          },
+          "getRecommendedTracks"
+        );
         return saved as Track[];
       }
 
@@ -65,13 +73,19 @@ export class SpotifyApi {
       const request = await this.client.get<Response>(`/recommendations`, {
         params,
       });
-      console.log(`get recommended tracks`, params, request.data.tracks.length);
+
+      logger.info(
+        {
+          options,
+          response: request.data.tracks.length,
+        },
+        "getRecommendedTracks"
+      );
       cacheRecommendations[key] = request.data.tracks;
 
       return request.data.tracks || [];
     } catch (error: any) {
-      console.log({ error: JSON.stringify(error.headers) });
-      console.log(`get recommended tracks`, error?.response?.data);
+      logger.error(error?.response?.data, "getRecommendedTracks");
       return [];
     }
   }
@@ -128,10 +142,14 @@ export class SpotifyApi {
   async getProfile() {
     try {
       const request = await this.client.get<UserProfile>(`/me`);
-      console.log(`get profile`, request?.data?.id);
+      logger.info(
+        { response: { id: request.data.id, name: request.data.display_name } },
+        "getProfile"
+      );
+
       return request.data;
     } catch (error: any) {
-      console.log(`error get profile`, error?.response?.data);
+      logger.error(error?.response?.data, "getProfile");
       return null;
     }
   }
@@ -164,10 +182,16 @@ export class SpotifyApi {
         `/me/playlists`,
         { params: { limit: options?.limit } }
       );
-      console.log(`get profile playlist`, request.data.items.length);
+      logger.info(
+        {
+          options,
+          response: request.data.items.length,
+        },
+        "getProfilePlaylists"
+      );
       return request.data.items || [];
     } catch (error: any) {
-      console.log(`error get profile playlist`, error?.response?.data);
+      logger.error(error?.response?.data, "getProfilePlaylists");
       return [];
     }
   }
@@ -225,10 +249,13 @@ export class SpotifyApi {
           played_at: item.played_at,
         })) || [];
 
-      console.log(`get recently played tracks`, mapped.length);
+      logger.info(
+        { options, response: mapped.length },
+        "getRecentlyPlayedTracks"
+      );
       return mapped;
     } catch (error: any) {
-      console.log(`error recently played tracks`, error?.response?.data);
+      logger.error(error?.response?.data, "getRecentlyPlayedTracks");
       return [];
     }
   }
@@ -390,7 +417,19 @@ export class SpotifyApi {
           type: options.type.join(","),
         },
       });
-      console.log(`get search`, options.q);
+
+      logger.info(
+        {
+          options,
+          response: {
+            albums: request?.data?.albums?.items?.length || 0,
+            artists: request?.data?.artists?.items?.length || 0,
+            playlists: request?.data?.playlists?.items?.length || 0,
+            tracks: request?.data?.tracks?.items?.length || 0,
+          },
+        },
+        "search"
+      );
       return request.data;
     } catch (error: any) {
       const emptyResponse = {
@@ -403,7 +442,8 @@ export class SpotifyApi {
         items: [],
       };
 
-      console.log(`error search ${options.q}`, error?.response?.data);
+      logger.error(error?.response?.data, "search");
+
       return {
         albums: emptyResponse,
         artists: emptyResponse,

@@ -208,22 +208,22 @@ export function Player({ token }: Props) {
   }, [position, duration, player, currentTrack?.id]);
 
   return (
-    <>
+    <div className="sticky top-0">
       <AnimatePresence>
         {deviceId && currentTrack?.name && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="relative bg-black overflow-hidden mb-8"
+            className="relative overflow-hidden mb-8 "
           >
-            <div className="absolute w-full scale-105 top-0 blur-3xl z-0">
+            <div className="absolute w-full scale-105 top-0 blur-2xl z-0">
               <img
                 src={currentTrack?.album?.images?.[1]?.url}
                 className="w-full"
               />
             </div>
-            <div className="absolute top-0 left-0 bg-black/40 w-full h-full z-10" />
+            <div className="absolute top-0 left-0 bg-[#121212]/40 w-full h-full z-10" />
             <div className="p-6 z-20 relative">
               {context?.metadata.context_description && (
                 <div className="text-gray-300 text-center drop-shadow-md mb-6 text-xs font-extralight overflow-hidden truncate w-full">
@@ -342,25 +342,27 @@ export function Player({ token }: Props) {
       </AnimatePresence>
 
       {devices.length > 0 && (
-        <Select
-          value={deviceId}
-          onValueChange={async (currentDeviceId) => {
-            setDeviceId(currentDeviceId);
-            await setPlayerDeviceId({ device_ids: [currentDeviceId] });
-          }}
-        >
-          <SelectTrigger className="w-full rounded-xl mb-8">
-            <SelectValue placeholder="Spotify devices" />
-          </SelectTrigger>
-          <SelectContent>
-            {devices.map((device) => (
-              <SelectItem value={device.id} key={device.id}>
-                {device.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="my-8 mx-4">
+          <Select
+            value={deviceId}
+            onValueChange={async (currentDeviceId) => {
+              setDeviceId(currentDeviceId);
+              await setPlayerDeviceId({ device_ids: [currentDeviceId] });
+            }}
+          >
+            <SelectTrigger className="w-full rounded-full mb-8">
+              <SelectValue placeholder="Spotify devices" />
+            </SelectTrigger>
+            <SelectContent>
+              {devices.map((device) => (
+                <SelectItem value={device.id} key={device.id}>
+                  {device.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       )}
-    </>
+    </div>
   );
 }

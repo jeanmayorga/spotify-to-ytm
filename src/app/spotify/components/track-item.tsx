@@ -10,7 +10,6 @@ import { useCurrentTrack } from "../store";
 import { cn } from "~/lib/utils";
 
 function getNextUris(uris: string[], id: string) {
-  console.log({ uris, id });
   const index = uris.indexOf(id);
   if (index === -1) return [];
   const resultArray = uris.slice(index);

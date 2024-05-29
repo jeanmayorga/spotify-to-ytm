@@ -103,8 +103,6 @@ export async function checkSavedTracks(options: { ids: string[] }) {
   const spotifyAcessTokenCookie = cookies().get("spotify-access-token");
   const spotifyApi = new SpotifyApi(spotifyAcessTokenCookie?.value);
 
-  console.log("run this");
-
   return spotifyApi.checkSavedTracks(options);
 }
 

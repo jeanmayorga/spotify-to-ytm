@@ -25,7 +25,7 @@ export default async function Loading() {
         </div>
       </div>
 
-      <div className="relative z-20 px-12 py-8 bg-black">
+      <div className="relative z-20 px-12 py-8">
         <section className="grid grid-cols-4 gap-4 mb-8">
           <section className=" col-span-3">
             <SectionTitle title="Featured Songs" />

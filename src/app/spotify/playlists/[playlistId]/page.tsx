@@ -18,7 +18,7 @@ export default async function Playlist({ params }: Props) {
         <div className="absolute w-full scale-105 bottom-0 blur-3xl z-0">
           <img src={playlist?.images?.[0]?.url} className="w-full" />
         </div>
-        <div className="absolute top-0 left-0 bg-gradient-to-t from-black/20 to-black/10 w-full h-full z-10" />
+        <div className="absolute top-0 left-0 bg-gradient-to-t from-[#121212]/20 to-black/10 w-full h-full z-10" />
         <div className="py-8 px-12 flex items-center space-x-4 z-20 relative">
           <img
             src={playlist?.images?.[0]?.url}
@@ -45,7 +45,7 @@ export default async function Playlist({ params }: Props) {
           </div>
         </div>
       </div>
-      <div className="relative z-20 px-12 py-8 bg-black">
+      <div className="relative z-20 px-12 py-8">
         <div className="border-b uppercase text-xs font-bold mb-4 text-gray-500 py-1 flex items-center">
           <div className="px-2">#</div>
           <div className="px-3">Songs</div>
